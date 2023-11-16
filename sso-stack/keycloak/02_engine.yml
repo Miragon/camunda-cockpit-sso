@@ -1,0 +1,21 @@
+id: engine
+author: Dominik Horn
+realm: ${SSO_REALM}
+changes:
+  - addSimpleClient:
+      clientId: ${SSO_ENGINE_CLIENT_ID}
+      secret: ${SSO_ENGINE_CLIENT_SECRET}
+      publicClient: false
+      redirectUris:
+        - http://localhost:8082/*
+  - addRole:
+      clientId: ${SSO_ENGINE_CLIENT_ID}
+      clientRole: true
+      name: camunda-admin
+      description: Special camunda admin group.
+  - addRole:
+      clientId: ${SSO_ENGINE_CLIENT_ID}
+      clientRole: true
+      name: ${WEBAPP_REQUIRED_ROLE}
+      description: Can use Camunda web apps.
+

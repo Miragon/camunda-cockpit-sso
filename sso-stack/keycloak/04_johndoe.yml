@@ -1,0 +1,26 @@
+id: johndoe
+author: Dominik Horn
+realm: ${SSO_REALM}
+changes:
+  - addUser:
+      name: johndoe
+      lastName: Doe
+      firstName: John
+      enabled: true
+      emailVerified: true
+      email: john.doe@example.com
+      groups:
+        - group1
+      attributes:
+        user_name:
+          - john.doe
+        user_id:
+          - 123456789
+      clientRoles:
+        - client: ${SSO_ENGINE_CLIENT_ID}
+          role: camunda-admin
+        - client: ${SSO_ENGINE_CLIENT_ID}
+          role: ${WEBAPP_REQUIRED_ROLE}
+  - updateUserPassword:
+      name: johndoe
+      password: "test"

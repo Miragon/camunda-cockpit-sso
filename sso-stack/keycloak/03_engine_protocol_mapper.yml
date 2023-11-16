@@ -1,0 +1,31 @@
+id: engine_protocol_mapper
+author: Dominik Horn
+realm: ${SSO_REALM}
+changes:
+  - addClientUserAttributeMapper:
+      clientId: ${SSO_ENGINE_CLIENT_ID}
+      name: user_id
+      userAttribute: user_id
+      claimName: user_id
+      addToUserInfo: true
+      addToAccessToken: true
+  - addClientUserAttributeMapper:
+      clientId: ${SSO_ENGINE_CLIENT_ID}
+      name: user_name
+      userAttribute: user_name
+      claimName: user_name
+      addToUserInfo: true
+      addToAccessToken: true
+  - addClientMapper:
+      clientId: ${SSO_ENGINE_CLIENT_ID}
+      name: userClientRole
+      protocolMapper: oidc-usermodel-client-role-mapper
+      config:
+        access.token.claim: true
+        id.token.claim: true
+        userinfo.token.claim: true
+        jsonType.label: String
+        multivalued: true
+        claim.name: "user_roles"
+        usermodel.clientRoleMapping.clientId: ${SSO_ENGINE_CLIENT_ID}
+        usermodel.clientRoleMapping.rolePrefix: "ROLE_"
