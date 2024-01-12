@@ -91,9 +91,8 @@ public class CamundaWebAppsSecurityConfiguration {
                                 antMatcher("/engine-rest/**")
                         ).authenticated()
                 ).oauth2ResourceServer(resource -> resource
-                        .jwt(jwt -> jwt
-                                .jwtAuthenticationConverter(grantedAuthoritiesExtractor)
-                        )).build();
+                        .jwt(jwt -> jwt.jwtAuthenticationConverter(grantedAuthoritiesExtractor))
+                ).build();
     }
 
 
