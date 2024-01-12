@@ -11,7 +11,7 @@ changes:
   - addRole:
       clientId: ${SSO_ENGINE_CLIENT_ID}
       clientRole: true
-      name: camunda-admin
+      name: ${ENGINE_REQUIRED_ROLE}
       description: Special camunda admin group.
   - addRole:
       clientId: ${SSO_ENGINE_CLIENT_ID}

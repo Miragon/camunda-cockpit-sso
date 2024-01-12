@@ -18,7 +18,7 @@ changes:
           - 123456789
       clientRoles:
         - client: ${SSO_ENGINE_CLIENT_ID}
-          role: camunda-admin
+          role: ${ENGINE_REQUIRED_ROLE}
         - client: ${SSO_ENGINE_CLIENT_ID}
           role: ${WEBAPP_REQUIRED_ROLE}
   - updateUserPassword:
