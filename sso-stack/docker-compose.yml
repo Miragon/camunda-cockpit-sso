@@ -20,7 +20,6 @@ services:
       KC_DB_URL: jdbc:postgresql://postgres-keycloak:5432/keycloak
       KC_DB_USERNAME: keycloak-user
       KC_DB_PASSWORD: keycloak-secret
-      # Keycloak 26 renamed the initial admin bootstrap variables (was KEYCLOAK_ADMIN / KEYCLOAK_ADMIN_PASSWORD).
       KC_BOOTSTRAP_ADMIN_USERNAME: admin
       KC_BOOTSTRAP_ADMIN_PASSWORD: admin
     networks:

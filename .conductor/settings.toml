@@ -1,21 +1,10 @@
 "$schema" = "https://conductor.build/schemas/settings.repo.schema.json"
 
 [scripts]
-# Warm the Maven dependency cache so the first run is fast.
 setup = "./mvnw -q -B -DskipTests dependency:go-offline"
-
-# The stack uses fixed host ports (8080/8082/25433) and fixed container names,
-# so only one workspace can run it at a time.
 run_mode = "nonconcurrent"
-
-# Stop and remove the local SSO stack (containers + volumes) when the workspace
-# is archived, so nothing keeps running or holds onto ports/data.
 archive = "docker compose -f sso-stack/docker-compose.yml down -v"
 
-# Single combined target: start the SSO stack, load its env, install the reactor
-# so the service module can resolve the starter, then run the service.
-# No `default` is set, so nothing autostarts — press Run to launch it.
-# Requires the documented hosts alias: `127.0.0.1 localhost keycloak`.
 [scripts.run.app]
 command = "docker compose -f sso-stack/docker-compose.yml up -d && set -a && . ./sso-stack/local-docker.env && set +a && ./mvnw install -DskipTests && ./mvnw -f cockpit-sso-service/pom.xml spring-boot:run"
 icon = "rocket"

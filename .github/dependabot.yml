@@ -12,9 +12,6 @@ updates:
       include: 'scope'
     cooldown:
       default-days: 7
-    # Camunda 7 has reached end-of-life and has no support for Spring Boot 4 /
-    # Spring Security 7 (e.g. AntPathRequestMatcher, used by the SSO security
-    # config, was removed there). Pin Spring Boot to the 3.x line.
     ignore:
       - dependency-name: 'org.springframework.boot:*'
         versions: ['>=4.0.0']
