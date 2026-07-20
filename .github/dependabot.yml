@@ -1,0 +1,64 @@
+version: 2
+updates:
+  # Java dependencies (multi-module Maven reactor) — one monthly PR
+  - package-ecosystem: 'maven'
+    directory: '/'
+    schedule:
+      interval: 'monthly'
+    labels:
+      - 'dependencies'
+    commit-message:
+      prefix: 'chore'
+      include: 'scope'
+    cooldown:
+      default-days: 7
+    groups:
+      maven-all:
+        applies-to: version-updates
+        patterns: ['*']
+        update-types: ['patch', 'minor', 'major']
+      maven-security:
+        applies-to: security-updates
+        patterns: ['*']
+
+  # GitHub Actions used in workflows — one monthly PR
+  - package-ecosystem: 'github-actions'
+    directory: '/'
+    schedule:
+      interval: 'monthly'
+    labels:
+      - 'dependencies'
+    commit-message:
+      prefix: 'chore'
+      include: 'scope'
+    cooldown:
+      default-days: 7
+    groups:
+      github-actions-all:
+        applies-to: version-updates
+        patterns: ['*']
+        update-types: ['patch', 'minor', 'major']
+      github-actions-security:
+        applies-to: security-updates
+        patterns: ['*']
+
+  # Local dev SSO stack images (Keycloak, Postgres, keycloakmigration) — one monthly PR
+  - package-ecosystem: 'docker-compose'
+    directory: '/sso-stack'
+    schedule:
+      interval: 'monthly'
+    labels:
+      - 'dependencies'
+    commit-message:
+      prefix: 'chore'
+      include: 'scope'
+    cooldown:
+      default-days: 7
+    groups:
+      docker-compose-all:
+        applies-to: version-updates
+        patterns: ['*']
+        update-types: ['patch', 'minor', 'major']
+      docker-compose-security:
+        applies-to: security-updates
+        patterns: ['*']
