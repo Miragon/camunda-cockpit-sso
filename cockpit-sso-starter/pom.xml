@@ -19,7 +19,7 @@
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
-                <version>3.1.1</version>
+                <version>${spring-boot.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -27,7 +27,7 @@
             <dependency>
                 <groupId>org.camunda.bpm</groupId>
                 <artifactId>camunda-bom</artifactId>
-                <version>7.20.0</version>
+                <version>${camunda.version}</version>
                 <scope>import</scope>
                 <type>pom</type>
             </dependency>
@@ -86,7 +86,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>3.1.1</version>
+                <version>${spring-boot.version}</version>
             </plugin>
         </plugins>
     </build>

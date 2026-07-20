@@ -39,5 +39,3 @@ camunda:
     id-generator: strong
     database:
       schema-update: true
-    generic-properties.properties:
-      telemetry-reporter-activate: false
