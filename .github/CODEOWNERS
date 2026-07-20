@@ -1,0 +1,4 @@
+# Default owners for everything in the repo.
+# These owners are automatically requested for review on every pull request
+# and are used as reviewers by Dependabot.
+* @dominikhorn93 @emaarco
