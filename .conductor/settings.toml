@@ -8,3 +8,7 @@ archive = "docker compose -f sso-stack/docker-compose.yml down -v"
 [scripts.run.app]
 command = "docker compose -f sso-stack/docker-compose.yml up -d && set -a && . ./sso-stack/local-docker.env && set +a && ./mvnw install -DskipTests && ./mvnw -f cockpit-sso-service/pom.xml spring-boot:run"
 icon = "rocket"
+
+[scripts.run.smoke]
+command = "cd bruno && npx --yes @usebruno/cli run . --env Local"
+icon = "test-tube"
