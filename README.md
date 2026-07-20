@@ -6,18 +6,13 @@
 [![Camunda 7.24](https://img.shields.io/badge/Camunda-7.24-orange.svg)](https://docs.camunda.org/manual/7.24/)
 [![Spring Boot 3.5](https://img.shields.io/badge/Spring%20Boot-3.5-green.svg)](https://spring.io/projects/spring-boot)
 
-A **reference implementation** showing how to add **Single Sign-On (OAuth2 / OIDC)**
-to the **Camunda 7 web applications** — Cockpit, Tasklist and Admin.
+A **reference implementation** for adding **Single Sign-On (OAuth2 / OIDC)** to the
+**Camunda 7 web applications** (Cockpit, Tasklist, Admin) — replacing Camunda's
+built-in form login with an OAuth2/OIDC flow against an external identity provider
+such as **Keycloak**.
 
-Out of the box, the Camunda web apps use a form-based login against the engine's
-own user database. This project demonstrates how to replace that with a standard
-OAuth2/OIDC login flow against an external identity provider such as **Keycloak**,
-so the Camunda web apps participate in your organisation's SSO like any other
-application.
-
-It is a blueprint to learn from and adapt — **not** a published, drop-in library.
-See [Using this in your own project](#using-this-in-your-own-project) for how to
-reuse it.
+It is a blueprint to learn from and adapt, **not** a published drop-in library.
+See [Using this in your own project](#using-this-in-your-own-project) to reuse it.
 
 ## What it demonstrates
 
@@ -35,13 +30,12 @@ reuse it.
 
 The `cockpit-sso-starter` module configures a Spring Security filter chain that:
 
-1. Redirects unauthenticated web-app requests to the identity provider
-   (`oauth2Login`) and validates bearer tokens on the REST API
-   (`oauth2ResourceServer`).
-2. Requires the role configured in `application.web-app-role` for `/app/**`,
-   `/api/**`, `/assets/**` and `/lib/**`.
-3. Maps the token's roles into Spring `GrantedAuthorities` and hands the
-   authenticated user to Camunda through a container-based authentication provider.
+1. Redirects unauthenticated web-app requests to the identity provider (`oauth2Login`)
+   and validates bearer tokens on the REST API (`oauth2ResourceServer`).
+2. Requires the `application.web-app-role` role for `/app/**`, `/api/**`, `/assets/**`
+   and `/lib/**`.
+3. Maps the token's roles into Spring `GrantedAuthorities` and hands the user to
+   Camunda through a container-based authentication provider.
 
 See [`CamundaWebAppsSecurityConfiguration`](cockpit-sso-starter/src/main/java/io/miragon/camunda/sso/config/CamundaWebAppsSecurityConfiguration.java)
 for the full filter chain.
@@ -66,25 +60,27 @@ for the full filter chain.
 
 ## Quickstart (local development)
 
-The example service (`cockpit-sso-service`, port `8082`) together with the local
-`sso-stack` gives you a working SSO-protected Camunda in a few steps.
+The example service (`cockpit-sso-service`, port `8082`) plus the local `sso-stack`
+gives you a working SSO-protected Camunda in a few steps.
 
-> **Host alias required.** The stack references Keycloak by the hostname
-> `keycloak`. Add it to your hosts file so the same issuer URL resolves both
+> **Host alias required.** The stack references Keycloak by the hostname `keycloak`,
+> so add it to your hosts file — `/etc/hosts` on macOS/Linux,
+> `C:\Windows\System32\Drivers\etc\hosts` on Windows — so the issuer URL resolves both
 > inside Docker and on your machine:
 > ```
 > 127.0.0.1 localhost keycloak
 > ```
-> (`/etc/hosts` on macOS/Linux, `C:\Windows\System32\Drivers\etc\hosts` on Windows.)
 
-1. **Start the identity provider** (Keycloak, PostgreSQL, and a migration job that
-   seeds the `testrealm`, an `engine` client and a `johndoe` test user):
+1. **Start the identity provider** — Keycloak, PostgreSQL, and a migration job that
+   seeds the `testrealm`, an `engine` client and a `johndoe` test user:
 
    ```bash
    docker compose -f sso-stack/docker-compose.yml up -d
    ```
 
-2. **Run the example service** with the matching SSO settings:
+2. **Run the example service** with the matching SSO settings. The first `install`
+   publishes `cockpit-sso-starter` to your local Maven repo (rerun only after
+   changing the starter):
 
    ```bash
    set -a && source sso-stack/local-docker.env && set +a
@@ -92,20 +88,14 @@ The example service (`cockpit-sso-service`, port `8082`) together with the local
    ./mvnw -f cockpit-sso-service/pom.xml spring-boot:run
    ```
 
-   (The first `install` publishes `cockpit-sso-starter` to your local Maven
-   repository so the service module can resolve it; run it again only after
-   changing the starter.)
+3. **Open the web apps** at <http://localhost:8082/app/welcome/default/> and log in
+   through Keycloak as `johndoe` / `test`. (The security config only serves the apps
+   under `/app/**`; the bare `/` is not exposed.)
 
-3. **Open the web apps** at <http://localhost:8082> and log in through Keycloak:
-
-   | Username | Password |
-   |---|---|
-   | `johndoe` | `test` |
-
-4. **Smoke-test the stack** with the [Bruno](https://www.usebruno.com/) collection
-   in [`bruno/`](bruno). Open it in Bruno (or run `npx @usebruno/cli run bruno
-   --env Local` from the repo root) to check Keycloak, log `johndoe` in, and call
-   the Camunda REST API through the SSO-protected service.
+4. **Smoke-test the stack** with the [Bruno](https://www.usebruno.com/) collection in
+   [`bruno/`](bruno) — open it in Bruno, or run `npx @usebruno/cli run bruno --env Local`
+   from the repo root — to check Keycloak, log `johndoe` in, and call the Camunda REST
+   API through the SSO-protected service.
 
 ## Using this in your own project
 
