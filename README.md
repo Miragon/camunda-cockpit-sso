@@ -6,30 +6,34 @@
 [![Camunda 7.20](https://img.shields.io/badge/Camunda-7.20-orange.svg)](https://docs.camunda.org/manual/7.20/)
 [![Spring Boot 3.1](https://img.shields.io/badge/Spring%20Boot-3.1-green.svg)](https://spring.io/projects/spring-boot)
 
-A Spring Boot starter that adds **Single Sign-On (OAuth2 / OIDC)** to the
-**Camunda 7 web applications** — Cockpit, Tasklist and Admin.
+A **reference implementation** showing how to add **Single Sign-On (OAuth2 / OIDC)**
+to the **Camunda 7 web applications** — Cockpit, Tasklist and Admin.
 
 Out of the box, the Camunda web apps use a form-based login against the engine's
-own user database. This starter replaces that with a standard OAuth2/OIDC login
-flow against an external identity provider such as **Keycloak**, so your Camunda
-web apps participate in your organisation's SSO like any other application.
+own user database. This project demonstrates how to replace that with a standard
+OAuth2/OIDC login flow against an external identity provider such as **Keycloak**,
+so the Camunda web apps participate in your organisation's SSO like any other
+application.
 
-## Why use it
+It is a blueprint to learn from and adapt — **not** a published, drop-in library.
+See [Using this in your own project](#using-this-in-your-own-project) for how to
+reuse it.
 
-- **No custom security code.** Drop in the starter, point it at your identity
-  provider via standard Spring `spring.security.oauth2.*` properties, and the web
-  apps are protected by OIDC.
+## What it demonstrates
+
+- **OAuth2/OIDC login for the web apps** instead of Camunda's form login,
+  configured through standard Spring `spring.security.oauth2.*` properties.
 - **Role-gated access.** Only users carrying a configurable client role
   (`application.web-app-role`) may reach the web apps.
 - **Engine integration.** Bridges the OAuth2 principal into Camunda's
-  `ContainerBasedAuthenticationFilter` and ships a read-only identity provider, so
+  `ContainerBasedAuthenticationFilter` and adds a read-only identity provider, so
   the engine sees the authenticated user without maintaining a separate user store.
 - **Reverse-proxy aware.** Honours `X-Forwarded-*` headers so OAuth2 redirect URLs
   are built correctly behind HTTPS termination (e.g. an OpenShift/Ingress route).
 
 ## How it works
 
-The `cockpit-sso-starter` configures a Spring Security filter chain that:
+The `cockpit-sso-starter` module configures a Spring Security filter chain that:
 
 1. Redirects unauthenticated web-app requests to the identity provider
    (`oauth2Login`) and validates bearer tokens on the REST API
@@ -56,8 +60,8 @@ for the full filter chain.
 
 | Module | Description |
 |---|---|
-| [`cockpit-sso-starter`](cockpit-sso-starter) | The reusable Spring Boot starter — all the security/identity glue. Add this to your own Camunda web-app application. |
-| [`cockpit-sso-service`](cockpit-sso-service) | A runnable example application that uses the starter. Handy as a reference and for local testing. |
+| [`cockpit-sso-starter`](cockpit-sso-starter) | The SSO configuration — the Spring Security filter chain and Camunda identity glue. Despite the name, it is **not** an auto-configured Spring Boot starter; its `@Configuration` beans have to be picked up by component scanning (see [below](#using-this-in-your-own-project)). |
+| [`cockpit-sso-service`](cockpit-sso-service) | A runnable example application that wires in the configuration module. Handy as a reference and for local testing. |
 | [`sso-stack`](sso-stack) | A local Keycloak + PostgreSQL development environment (dev only, **not** for production). |
 
 ## Quickstart (local development)
@@ -93,13 +97,19 @@ The example service (`cockpit-sso-service`, port `8082`) together with the local
    |---|---|
    | `johndoe` | `test` |
 
-## Using the starter in your application
+## Using this in your own project
 
-> **Status:** the current version is `1.0.0-SNAPSHOT` and is **not yet published to
-> Maven Central**. Build and install it locally with `./mvnw install` until a release
-> is available.
+This repository is **not published to a Maven repository** and is **not an
+auto-configured Spring Boot starter** — adding `cockpit-sso-starter` as a
+dependency on its own will not wire anything up. There are two realistic ways to
+reuse it:
 
-Add the starter to your Camunda Spring Boot web-app project:
+**Option A — copy the configuration (recommended).** Copy the classes under
+[`cockpit-sso-starter/.../config`](cockpit-sso-starter/src/main/java/io/miragon/camunda/sso/config)
+into your own Camunda Spring Boot web-app project and adapt them to your needs.
+
+**Option B — build and depend on it locally.** Run `./mvnw install` to publish the
+module to your local Maven repository (`~/.m2`), then add the dependency:
 
 ```xml
 <dependency>
@@ -109,8 +119,18 @@ Add the starter to your Camunda Spring Boot web-app project:
 </dependency>
 ```
 
-Then configure your identity provider with the standard Spring Security OAuth2
-properties plus the two starter-specific properties:
+Because there is no auto-configuration, make sure Spring actually picks up the
+configuration beans — either place your application in the `io.miragon.camunda.sso`
+package (so component scanning finds them) or import them explicitly:
+
+```java
+@SpringBootApplication
+@ComponentScan(basePackages = {"com.your.app", "io.miragon.camunda.sso.config"})
+public class YourApplication { }
+```
+
+In either case, configure your identity provider with the standard Spring Security
+OAuth2 properties plus the two project-specific properties:
 
 ```yaml
 spring:
