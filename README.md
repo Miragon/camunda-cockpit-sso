@@ -3,8 +3,8 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![CI](https://github.com/Miragon/camunda-cockpit-sso/actions/workflows/ci.yml/badge.svg)](https://github.com/Miragon/camunda-cockpit-sso/actions/workflows/ci.yml)
 [![Java 17](https://img.shields.io/badge/Java-17-blue.svg)](https://adoptium.net/)
-[![Camunda 7.20](https://img.shields.io/badge/Camunda-7.20-orange.svg)](https://docs.camunda.org/manual/7.20/)
-[![Spring Boot 3.1](https://img.shields.io/badge/Spring%20Boot-3.1-green.svg)](https://spring.io/projects/spring-boot)
+[![Camunda 7.24](https://img.shields.io/badge/Camunda-7.24-orange.svg)](https://docs.camunda.org/manual/7.24/)
+[![Spring Boot 3.5](https://img.shields.io/badge/Spring%20Boot-3.5-green.svg)](https://spring.io/projects/spring-boot)
 
 A **reference implementation** showing how to add **Single Sign-On (OAuth2 / OIDC)**
 to the **Camunda 7 web applications** — Cockpit, Tasklist and Admin.
@@ -88,14 +88,24 @@ The example service (`cockpit-sso-service`, port `8082`) together with the local
 
    ```bash
    set -a && source sso-stack/local-docker.env && set +a
-   ./mvnw -pl cockpit-sso-service -am spring-boot:run
+   ./mvnw install -DskipTests
+   ./mvnw -f cockpit-sso-service/pom.xml spring-boot:run
    ```
+
+   (The first `install` publishes `cockpit-sso-starter` to your local Maven
+   repository so the service module can resolve it; run it again only after
+   changing the starter.)
 
 3. **Open the web apps** at <http://localhost:8082> and log in through Keycloak:
 
    | Username | Password |
    |---|---|
    | `johndoe` | `test` |
+
+4. **Smoke-test the stack** with the [Bruno](https://www.usebruno.com/) collection
+   in [`bruno/`](bruno). Open it in Bruno (or run `npx @usebruno/cli run bruno
+   --env Local` from the repo root) to check Keycloak, log `johndoe` in, and call
+   the Camunda REST API through the SSO-protected service.
 
 ## Using this in your own project
 
