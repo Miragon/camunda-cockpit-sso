@@ -2,7 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![CI](https://github.com/Miragon/camunda-cockpit-sso/actions/workflows/ci.yml/badge.svg)](https://github.com/Miragon/camunda-cockpit-sso/actions/workflows/ci.yml)
-[![Java 17](https://img.shields.io/badge/Java-17-blue.svg)](https://adoptium.net/)
+[![Java 21](https://img.shields.io/badge/Java-21-blue.svg)](https://adoptium.net/)
 [![Camunda 7.24](https://img.shields.io/badge/Camunda-7.24-orange.svg)](https://docs.camunda.org/manual/7.24/)
 [![Spring Boot 3.5](https://img.shields.io/badge/Spring%20Boot-3.5-green.svg)](https://spring.io/projects/spring-boot)
 
@@ -48,7 +48,7 @@ for the full filter chain.
 
 ## Requirements
 
-- Java 17
+- Java 21
 - An OAuth2/OIDC identity provider (Keycloak in the examples)
 - Docker / Podman + Docker Compose (for the local development stack)
 
