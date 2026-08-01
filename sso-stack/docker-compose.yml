@@ -44,7 +44,7 @@ services:
       - local-keycloak
 
   postgres-engine:
-    image: postgres:18.3
+    image: postgres:18.4
     container_name: postgres-engine
     environment:
       POSTGRES_USER: user
@@ -56,7 +56,7 @@ services:
       - internal
 
   postgres-keycloak:
-    image: postgres:18.3
+    image: postgres:18.4
     container_name: postgres-keycloak
     environment:
       POSTGRES_DB: keycloak
