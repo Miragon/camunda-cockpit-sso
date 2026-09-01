@@ -7,7 +7,7 @@ services:
   #
   keycloak:
     container_name: keycloak
-    image: ${KEYCLOAK_IMAGE:-quay.io/keycloak/keycloak:26.7.0}
+    image: ${KEYCLOAK_IMAGE:-quay.io/keycloak/keycloak:26.7.3}
     depends_on:
       - postgres-keycloak
     ports:
@@ -27,7 +27,7 @@ services:
       - internal
 
   init-keycloak:
-    image: klg71/keycloakmigration:0.2.129
+    image: klg71/keycloakmigration:0.2.131
     depends_on:
       - keycloak
     env_file:
@@ -44,7 +44,7 @@ services:
       - local-keycloak
 
   postgres-engine:
-    image: postgres:18.3
+    image: postgres:18.6
     container_name: postgres-engine
     environment:
       POSTGRES_USER: user
@@ -56,7 +56,7 @@ services:
       - internal
 
   postgres-keycloak:
-    image: postgres:18.3
+    image: postgres:18.6
     container_name: postgres-keycloak
     environment:
       POSTGRES_DB: keycloak
