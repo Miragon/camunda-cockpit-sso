@@ -45,7 +45,7 @@ updates:
         applies-to: security-updates
         patterns: ['*']
 
-  # Local dev SSO stack images (Keycloak, Postgres, keycloakmigration) — one monthly PR
+  # Local dev SSO stack images (Keycloak, Postgres, keycloak-config-cli) — one monthly PR
   - package-ecosystem: 'docker-compose'
     directory: '/sso-stack'
     schedule:
