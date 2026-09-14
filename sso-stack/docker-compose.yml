@@ -27,7 +27,7 @@ services:
       - internal
 
   init-keycloak:
-    image: klg71/keycloakmigration:0.2.131
+    image: klg71/keycloakmigration:0.2.130
     depends_on:
       - keycloak
     env_file:
