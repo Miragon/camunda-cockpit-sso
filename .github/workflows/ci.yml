@@ -85,7 +85,8 @@ jobs:
           echo "Service did not start in time"; tail -n 200 app.log; exit 1
 
       - name: Run Bruno scenarios
-        run: npx --yes @usebruno/cli@4.0.0 run bruno --env Local -r
+        working-directory: bruno
+        run: npx --yes @usebruno/cli@4.0.0 run . --env Local -r
 
       - name: Dump logs on failure
         if: failure()
